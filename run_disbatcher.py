@@ -42,16 +42,17 @@ def main():
             task = get_task(A, B, 0)
             disbatcher.submit(task['cmd'])
             tasks += [task]
+            print(f'Submitting task {task}')
+            del task
 
     # Wait for tasks to complete. Resubmit as necessary.
     njob = len(tasks)
     ndone = 0
     while ndone < njob:
         status = disbatcher.wait_one_task()
-        print(status)
+        oldtask = tasks[status['TaskId']]
         if status['ReturnCode'] in (74, 84):
             # resubmit with new seed
-            oldtask = tasks[status['TaskId']]
             newi = oldtask['i'] + 1
             
             newtask = get_task(oldtask['A'], oldtask['B'], newi)
@@ -59,9 +60,11 @@ def main():
                 continue
             disbatcher.submit(newtask['cmd'])
             tasks += [newtask]
+            print(f'Resubmitting task {newtask}')
         else:
             # done task
             ndone += 1
+            print(f'Finished task successfully: {oldtask}')
     
     disbatcher.done()
 

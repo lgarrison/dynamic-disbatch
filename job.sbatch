@@ -10,5 +10,10 @@
 #SBATCH --time=1-0
 
 . env.sh
+script=$(realpath run_disbatcher.py)
 
-python run_disbatcher.py
+workdir=job$SLURM_JOBID
+mkdir -p $workdir
+cd $workdir
+
+python $script
