@@ -32,9 +32,7 @@ def get_task(A, B, i):
     return task
 
 
-def main():
-    disbatcher = DisBatcher(tasksname='dynamic-disBatch')
-
+def main(disbatcher):
     # Submit all the tasks with the first seed
     tasks = []
     for A in range(AMIN, AMAX, 2):
@@ -65,9 +63,11 @@ def main():
             # done task
             ndone += 1
             print(f'Finished task successfully: {oldtask}')
-    
-    disbatcher.done()
 
 
 if __name__ == '__main__':
-    main()
+    disbatcher = DisBatcher(tasksname='dynamic-disBatch')
+    try:
+        main(disbatcher)
+    finally:
+        disbatcher.done()
